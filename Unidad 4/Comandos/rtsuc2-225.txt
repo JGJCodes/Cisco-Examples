@@ -1,0 +1,227 @@
+Building configuration...
+
+Current configuration : 4790 bytes
+!
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname RT-SUC2
+!
+boot-start-marker
+boot-end-marker
+!
+logging message-counter syslog
+enable secret 5 $1$75RP$z1rsh6JaR5/I3LxaFbM0B.
+!
+no aaa new-model
+!
+!
+dot11 syslog
+ip source-route
+!
+!
+ip dhcp excluded-address 192.168.12.1 192.168.12.10
+ip dhcp excluded-address 192.168.12.33 192.168.12.43
+ip dhcp excluded-address 192.168.12.65 192.168.12.75
+ip dhcp excluded-address 192.168.12.97 192.168.12.107
+ip dhcp excluded-address 192.168.12.129 192.168.12.139
+ip dhcp excluded-address 192.168.12.193 192.168.12.203
+ip dhcp excluded-address 192.168.12.225 192.168.12.235
+ip dhcp excluded-address 192.168.12.161 192.168.12.170
+!
+ip dhcp pool VLAN2
+   network 192.168.12.0 255.255.255.224
+   default-router 192.168.12.30 
+   dns-server 8.8.8.8 4.4.4.4 
+!
+ip dhcp pool VLAN3
+   network 192.168.12.32 255.255.255.224
+   default-router 192.168.12.62 
+   dns-server 8.8.8.8 4.4.4.4 
+!
+ip dhcp pool VLAN4
+   network 192.168.12.64 255.255.255.224
+   default-router 192.168.12.94 
+   dns-server 8.8.8.8 4.4.4.4 
+!         
+ip dhcp pool VLAN5
+   network 192.168.12.96 255.255.255.224
+   default-router 192.168.12.126 
+   dns-server 8.8.8.8 4.4.4.4 
+!
+ip dhcp pool VLAN6
+   network 192.168.12.128 255.255.255.224
+   default-router 192.168.12.158 
+   dns-server 8.8.8.8 4.4.4.4 
+!
+ip dhcp pool VLAN7
+   network 192.168.12.160 255.255.255.224
+   default-router 192.168.12.190 
+   dns-server 8.8.8.8 8.8.4.4 
+!
+ip dhcp pool VLAN8
+   network 192.168.12.192 255.255.255.224
+   default-router 192.168.12.222 
+   dns-server 8.8.8.8 4.4.4.4 
+!
+ip dhcp pool VLAN9
+   network 192.168.12.224 255.255.255.224
+   default-router 192.168.12.254 
+   dns-server 8.8.8.8 4.4.4.4 
+!
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+! 
+!
+!
+archive
+ log config
+  hidekeys
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/0.2
+ description $Gateway de VLAN 2 Administracion$
+ encapsulation dot1Q 2
+ ip address 192.168.12.30 255.255.255.224
+ ip nat inside
+ ip virtual-reassembly
+!
+interface FastEthernet0/0.3
+ description $Gateway de VLAN 3 Sistemas$
+ encapsulation dot1Q 3
+ ip address 192.168.12.62 255.255.255.224
+ ip nat inside
+ ip virtual-reassembly
+!
+interface FastEthernet0/0.4
+ description $Gateway de VLAN 4 Gerencia$
+ encapsulation dot1Q 4
+ ip address 192.168.12.94 255.255.255.224
+ ip nat inside
+ ip virtual-reassembly
+!
+interface FastEthernet0/0.5
+ description $Gateway de VLAN 5 Ventas$
+ encapsulation dot1Q 5
+ ip address 192.168.12.126 255.255.255.224
+ ip nat inside
+ ip virtual-reassembly
+!
+interface FastEthernet0/0.6
+ description $Gateway de VLAN 6 Almacen$
+ encapsulation dot1Q 6
+ ip address 192.168.12.158 255.255.255.224
+ ip nat inside
+ ip virtual-reassembly
+!
+interface FastEthernet0/0.7
+ description $Gateway de VLAN 7 Telefonia$
+ encapsulation dot1Q 7
+ ip address 192.168.12.190 255.255.255.224
+ ip nat inside
+ ip virtual-reassembly
+!
+interface FastEthernet0/0.8
+ description $Gateway de VLAN 8 ApInternos$
+ encapsulation dot1Q 8
+ ip address 192.168.12.222 255.255.255.224
+ ip nat inside
+ ip virtual-reassembly
+!
+interface FastEthernet0/0.9
+ description $Gateway de VLAN 9 ApInvitados$
+ encapsulation dot1Q 9
+ ip address 192.168.12.254 255.255.255.224
+ ip nat inside
+ ip virtual-reassembly
+!
+interface FastEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1.100
+ description $CONECT TO INTRANET$
+ encapsulation dot1Q 100
+ ip address 172.30.100.112 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly
+!
+interface FastEthernet0/1.101
+ description $CONECT TO INTERNET$
+ encapsulation dot1Q 101
+ ip address 172.30.101.112 255.255.255.0
+ ip nat outside
+ ip virtual-reassembly
+!
+interface Serial0/0/0
+ description $CONECT TO CORP$
+ ip address 192.168.9.6 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly
+ encapsulation ppp
+ clock rate 2000000
+!
+router eigrp 1
+ redistribute static
+ network 172.30.100.0 0.0.0.255
+ network 192.168.9.4 0.0.0.3
+ network 192.168.12.0
+ no auto-summary
+!
+ip forward-protocol nd
+ip route 0.0.0.0 0.0.0.0 172.30.101.254
+no ip http server
+no ip http secure-server
+!
+!
+ip nat inside source list 100 interface FastEthernet0/1.101 overload
+!
+access-list 100 permit ip 192.168.10.0 0.0.0.255 any
+access-list 100 permit ip 192.168.11.0 0.0.0.255 any
+access-list 100 permit ip 192.168.12.0 0.0.0.255 any
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+banner motd ^C
+-----------------------------------------------
+            Bienvenido RT-SUC2
+-----------------------------------------------
+^C
+!
+line con 0
+ exec-timeout 0 0
+ password consola
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ exec-timeout 0 0
+ password telnet
+ logging synchronous
+ login
+!
+scheduler allocate 20000 1000
+end

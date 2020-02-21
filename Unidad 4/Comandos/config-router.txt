@@ -1,0 +1,157 @@
+﻿**********Configuracion basica del router*************************
+enable
+configure terminal
+hostname RT-SUC2
+enable secret cisco
+line console 0
+password consola
+login
+exec-timeout 0 0
+logging synchronous
+exit
+line vty 0 4
+password telnet
+login
+exec-timeout 0 0
+logging synchronous
+exit
+banner motd #
+Enter TEXT message.  End with the character '#'
+-----------------------------------------------                                   
+            Bienvenido RT-SUC2                  
+----------------------------------------------- 
+#
+exit
+wr
+
+**********Configuracion interfaces vlan*************************
+configure terminal
+do show ip interface brief
+interface fa0/0
+no shutdown
+exit
+interface fa0/0.2
+description $Gateway de VLAN 2 Administracion$
+encapsulation dot1q 2
+ip address 192.168.12.30 255.255.255.224
+no shutdown
+exit
+wr
+
+**********Configuracion de DHCP server*************************
+ip dhcp excluded-address 192.168.12.1 192.168.12.10
+ip dhcp pool VLAN2
+network 192.168.12.0 255.255.255.224
+default-router 192.168.12.30
+dns-server 8.8.8.8 8.8.4.4
+dns-server 8.8.8.8 4.4.4.4
+exit
+
+**********Configuracion de seriales****************************
+interface serial 0/0
+description $CONECT TO CORP$
+ip address 192.168.9.6 255.255.255.252
+encapsulation ppp
+no shutdown
+exit
+
+**********Enrutamiento estatico******************
+ip route 192.168.11.0 255.255.255.0 serial 0/O/O
+ip route 192.168.12.0 255.255.255.0 192.168.14.1
+
+**********ENRUTAMIENTO POR DEFAULT******************
+ip route 0.0.0.0 0.0.0.0 serial 0/O/O
+ip route 0.0.0.0 0.0.0.0 192.168.14.1
+
+**********ENRUTAMIENTO DIN�MICO: EIGRP******************
+router eigrp 1
+no auto-summary
+network 192.168.11.0 0.0.0.255	mascara wildcard
+network 192.168.14.0 0.0.0.3	direccion ip enlace
+network 0.0.0.0 255.255.255.255
+redistribute ?
+redistribute static
+exit
+
+**********ENRUTAMIENTO DIN�MICO: OSPF******************
+router ospf 1
+network 192.168.11.0 0.0.0.255 area 0	mascara wildcard
+network 192.168.14.0 0.0.0.3 area 0	direccion ip enlace
+default-information originate
+exit
+
+**********CONFIGURACION DE WAN DINAMICO******************
+interface fastethernet 0/0
+description $CONECT WAN$
+ip address dhcp
+ip nat outside
+no shutdown
+exit
+
+interface  fastethernet 0/1.2
+ip nat inside
+exit
+
+interface serial0/0/0
+ip nat inside
+exit
+
+access-list 100 permit ip 192.168.10.0 0.0.0.255 any
+access-list 100 permit ip any any 
+
+ip nat inside source list 100 interface fastethernet 0/0 overload
+ 
+
+**********CONFIGURACION DE WAN ESTATICO******************
+interface fastethernet 0/0
+description $CONECT WAN$
+ip address 10.255.255.80 255.255.255.126
+ip nat outside
+no shutdown
+exit
+
+ip route 0.0.0.0 0.0.0.0 10.255.255.126
+
+interface  fastethernet 0/1.2
+ip nat inside
+exit
+
+interface range fa0/0.2 - fa0/0.9
+ip nat inside
+exit
+
+interface serial0/0/0
+ip nat inside
+exit
+
+access-list 100 permit ip 192.168.11.0 0.0.0.255 any
+ip nat inside source list 100 interface fastethernet 0/0 overload
+
+**********CONFIGURACION DE WAN DE INTRANET****************************
+default interface fastethernet 0/1 
+interface fastethernet 0/1 
+description $CONECT WAN$
+ip address dhcp
+ip nat outside
+no shutdown
+exit
+
+interface fastethernet0/1.101
+description $CONECT TO INTERNET$
+encapsulation dot1q 101
+ip address 172.30.101.112 255.255.255.0
+ip nat outside
+exit
+
+access-list 100 permit ip any any
+ip nat inside source list 100 interface FastEthernet0/1.101 overload
+
+interface fastethernet0/1.100
+description $CONECT TO INTRANET$
+encapsulation dot1q 100
+ip address 172.30.100.112 255.255.255.0
+ip nat inside
+exit
+
+router eigrp 1
+network 172.30.100.0 0.0.0.255

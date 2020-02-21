@@ -1,0 +1,134 @@
+Building configuration...
+
+Current configuration : 2179 bytes
+!
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname RT-SUC2
+!
+boot-start-marker
+boot-end-marker
+!
+logging message-counter syslog
+enable secret 5 $1$75RP$z1rsh6JaR5/I3LxaFbM0B.
+!
+no aaa new-model
+!
+!
+dot11 syslog
+ip source-route
+!
+!
+!         
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+! 
+!
+!
+archive
+ log config
+  hidekeys
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/0.2
+ description $Gateway de VLAN 2 Administracion$
+ encapsulation dot1Q 2
+ ip address 192.168.12.30 255.255.255.224
+!
+interface FastEthernet0/0.3
+ description $Gateway de VLAN 3 Sistemas$
+ encapsulation dot1Q 3
+ ip address 192.168.12.62 255.255.255.224
+!
+interface FastEthernet0/0.4
+ description $Gateway de VLAN 4 Gerencia$
+ encapsulation dot1Q 4
+ ip address 192.168.12.94 255.255.255.224
+!
+interface FastEthernet0/0.5
+ description $Gateway de VLAN 5 Ventas$
+ encapsulation dot1Q 5
+ ip address 192.168.12.126 255.255.255.224
+!
+interface FastEthernet0/0.6
+ description $Gateway de VLAN 6 Almacen$
+ encapsulation dot1Q 6
+ ip address 192.168.12.158 255.255.255.224
+!
+interface FastEthernet0/0.7
+ description $Gateway de VLAN 7 Telefonia$
+ encapsulation dot1Q 7
+ ip address 192.168.12.190 255.255.255.224
+!
+interface FastEthernet0/0.8
+ description $Gateway de VLAN 8 ApInternos$
+ encapsulation dot1Q 8
+ ip address 192.168.12.222 255.255.255.224
+!
+interface FastEthernet0/0.9
+ description $Gateway de VLAN 9 ApInvitados$
+ encapsulation dot1Q 9
+ ip address 192.168.12.254 255.255.255.224
+!
+interface FastEthernet0/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+banner motd ^C
+-----------------------------------------------
+            Bienvenido RT-SUC2
+-----------------------------------------------
+^C
+!
+line con 0
+ exec-timeout 0 0
+ password consola
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ exec-timeout 0 0
+ password telnet
+ logging synchronous
+ login
+!
+scheduler allocate 20000 1000
+end

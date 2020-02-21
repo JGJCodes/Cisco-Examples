@@ -1,0 +1,203 @@
+WS-03#show run
+Building configuration...
+
+Current configuration : 3836 bytes
+!
+version 12.2
+no service pad
+service timestamps debug uptime
+service timestamps log uptime
+no service password-encryption
+!
+hostname WS-03
+!
+enable secret 5 $1$ZjrV$mt8L4O2KQL1RXDIs9YUiw/
+!
+no aaa new-model
+ip subnet-zero
+!
+!
+!
+!
+no file verify auto
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+interface FastEthernet0/1
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/2
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/3
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/4
+ switchport access vlan 2
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/5
+ switchport access vlan 3
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/6
+ switchport access vlan 3
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/7
+ switchport access vlan 3
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/8
+ switchport access vlan 3
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/9
+ switchport access vlan 4
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/10
+ switchport access vlan 4
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/11
+ switchport access vlan 4
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/12
+ switchport access vlan 4
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/13
+ switchport access vlan 5
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/14
+ switchport access vlan 5
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/15
+ switchport access vlan 5
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/16
+ switchport access vlan 5
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/17
+ switchport access vlan 6
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/18
+ switchport access vlan 6
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/19
+ switchport access vlan 6
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!         
+interface FastEthernet0/20
+ switchport access vlan 6
+ switchport mode access
+ switchport voice vlan 7
+ spanning-tree portfast
+!
+interface FastEthernet0/21
+ switchport access vlan 8
+ switchport mode access
+!
+interface FastEthernet0/22
+ switchport access vlan 8
+ switchport mode access
+!
+interface FastEthernet0/23
+ switchport access vlan 9
+ switchport mode access
+!
+interface FastEthernet0/24
+ switchport access vlan 9
+ switchport mode access
+!
+interface GigabitEthernet0/1
+ switchport mode trunk
+!
+interface GigabitEthernet0/2
+ switchport mode trunk
+!
+interface Vlan1
+ no ip address
+ no ip route-cache
+ shutdown
+!
+interface Vlan3
+ ip address 192.168.13.61 255.255.255.0
+ no ip route-cache
+!
+ip default-gateway 192.168.13.62
+ip http server
+!
+control-plane
+!
+banner motd ^C
+-----------------------------------------------
+                WS-03
+-----------------------------------------------
+^C
+!
+line con 0
+ exec-timeout 0 0
+ password consola
+ logging synchronous
+ login
+line vty 0 4
+ exec-timeout 0 0
+ password telnet
+ logging synchronous
+ login
+line vty 5 15
+ no login
+!
+end

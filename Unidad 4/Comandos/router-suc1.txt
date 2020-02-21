@@ -1,0 +1,110 @@
+enable
+configure terminal
+hostname RT-SUC1
+enable secret cisco
+line console 0
+password consola
+login
+exec-timeout 0 0
+logging synchronous
+exit
+line vty 0 4
+password telnet
+login
+exec-timeout 0 0
+logging synchronous
+exit
+banner motd #
+Enter TEXT message.  End with the character '#'
+-----------------------------------------------                                   
+            Bienvenido RT-SUC1                  
+----------------------------------------------- 
+#
+exit
+wr
+
+interface fa0/0
+no shutdown
+exit
+interface fa0/0.2
+description $Gateway de VLAN 2 Administracion$
+encapsulation dot1q 2
+ip address 192.168.11.30 255.255.255.224
+no shutdown
+exit
+
+ip dhcp excluded-address 192.168.11.1 192.168.11.10
+ip dhcp pool VLAN2
+network 192.168.11.0 255.255.255.224
+default-router 192.168.11.30
+dns-server 8.8.8.8 4.4.4.4
+exit
+
+ip dhcp excluded-address 192.168.11.33 192.168.11.42
+ip dhcp pool VLAN3
+network 192.168.11.32 255.255.255.224
+default-router 192.168.11.62
+dns-server 8.8.8.8 4.4.4.4
+exit
+
+ip dhcp excluded-address 192.168.11.65 192.168.11.74
+ip dhcp pool VLAN4
+network 192.168.11.64 255.255.255.224
+default-router 192.168.11.94
+dns-server 8.8.8.8 4.4.4.4
+exit
+
+ip dhcp excluded-address 192.168.11.97 192.168.11.106
+ip dhcp pool VLAN5
+network 192.168.11.96 255.255.255.224
+default-router 192.168.11.126
+dns-server 8.8.8.8 4.4.4.4
+exit
+
+ip dhcp excluded-address 192.168.11.129 192.168.11.138
+ip dhcp pool VLAN6
+network 192.168.11.128 255.255.255.224
+default-router 192.168.11.158
+dns-server 8.8.8.8 4.4.4.4
+exit
+
+ip dhcp excluded-address 192.168.11.161 192.168.11.170
+ip dhcp pool VLAN7
+network 192.168.11.160 255.255.255.224
+default-router 192.168.11.190
+dns-server 8.8.8.8 4.4.4.4
+exit
+
+ip dhcp excluded-address 192.168.11.193 192.168.11.202
+ip dhcp pool VLAN8
+network 192.168.11.192 255.255.255.224
+default-router 192.168.11.222
+dns-server 8.8.8.8 4.4.4.4
+exit
+
+ip dhcp excluded-address 192.168.11.225 192.168.11.234
+ip dhcp pool VLAN9
+network 192.168.11.224 255.255.255.224
+default-router 192.168.11.254
+dns-server 8.8.8.8 4.4.4.4
+exit
+
+interface serial 0/1/0
+description $CONECT TO SUC1$
+ip address 192.168.9.2 255.255.255.252
+encapsulation ppp
+no shutdown
+exit
+
+router eigrp 1
+no auto-summary
+network 192.168.10.0 0.0.0.31
+network 192.168.10.32 0.0.0.31
+network 192.168.10.64 0.0.0.31
+network 192.168.10.96 0.0.0.31
+network 192.168.10.128 0.0.0.31
+network 192.168.10.160 0.0.0.31
+network 192.168.10.192 0.0.0.31
+network 192.168.10.224 0.0.0.31
+network 192.168.9.0 0.0.0.3
+exit

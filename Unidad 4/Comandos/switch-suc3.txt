@@ -1,0 +1,74 @@
+enable
+configure terminal
+hostname WS-SUC3
+enable secret cisco
+line console 0
+password consola
+login
+exec-timeout 0 0
+logging synchronous
+exit
+line vty 0 4 
+password telnet
+login
+exec-timeout 0 0
+logging synchronous
+exit
+banner motd # 
+------------------------
+Bienvenido WS-SUC2
+------------------------
+#
+exit
+wr
+interface vlan 1
+shutdown
+exit
+interface vlan 3
+ip address 192.168.13.61 255.255.255.0
+exit
+ip default-gateway 192.168.13.62
+exit
+wr
+vlan database
+vlan 2 name Administracion
+vlan 3 name Sistemas
+vlan 4 name Gerencia
+vlan 5 name Ventas
+vlan 6 name Almacen
+vlan 7 name Telefonia
+vlan 8 name ApInternos
+vlan 9 name ApInvitados
+apply
+interface range Fa0/1-24
+switchport mode access
+exit
+interface range Fa0/1-4
+switchport access vlan 2
+exit
+interface range Fa0/5-8
+switchport access vlan 3
+exit
+interface range Fa0/9-12
+switchport access vlan 4
+exit
+interface range Fa0/13-16
+switchport access vlan 5
+exit
+interface range Fa0/17-20
+switchport access vlan 6
+exit
+interface range Fa0/1-20
+switchport voice vlan 7
+exit
+interface range Fa0/21-22
+switchport access vlan 8
+exit
+interface range Fa0/23-24
+switchport access vlan 9
+exit
+interface Gi0/1
+switchport mode trunk
+exit
+wr
+
